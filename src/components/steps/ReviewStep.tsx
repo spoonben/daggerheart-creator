@@ -178,6 +178,7 @@ export function ReviewStep() {
 
   const handleReset = () => {
     if (confirm('Start over? This will clear all progress.')) {
+      localStorage.removeItem('daggerheart-character');
       dispatch({ type: 'RESET' });
       window.location.hash = '/';
     }

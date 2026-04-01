@@ -17,6 +17,7 @@ export type CharacterAction =
   | { type: 'SET_BACKGROUND'; background: string }
   | { type: 'SET_DESCRIPTION'; description: string }
   | { type: 'SET_EXPERIENCE'; index: number; name: string }
+  | { type: 'LOAD_CHARACTER'; character: Character }
   | { type: 'RESET' };
 
 export function characterReducer(state: Character, action: CharacterAction): Character {
@@ -71,6 +72,8 @@ export function characterReducer(state: Character, action: CharacterAction): Cha
           i === action.index ? { ...exp, name: action.name } : exp
         ),
       };
+    case 'LOAD_CHARACTER':
+      return { ...EMPTY_CHARACTER, ...action.character };
     case 'RESET':
       return EMPTY_CHARACTER;
     default:

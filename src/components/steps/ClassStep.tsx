@@ -1,11 +1,34 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useCharacter } from '../../context/CharacterContext';
 import { CLASSES } from '../../data/classes';
 import { CardSelect } from '../CardSelect';
 import { WizardShell } from '../WizardShell';
-import type { ClassData } from '../../types/character';
+import type { Character, ClassData } from '../../types/character';
+
+function getSavedCharacter(): Character | null {
+  try {
+    const raw = localStorage.getItem('daggerheart-character');
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed === 'object' && parsed.className) return parsed as Character;
+    return null;
+  } catch {
+    return null;
+  }
+}
 
 export function ClassStep() {
   const { character, dispatch } = useCharacter();
+  const navigate = useNavigate();
+  const [savedChar] = useState(getSavedCharacter);
+  const [dismissed, setDismissed] = useState(false);
+
+  const handleLoad = () => {
+    if (!savedChar) return;
+    dispatch({ type: 'LOAD_CHARACTER', character: savedChar });
+    navigate('/review');
+  };
 
   const handleSelect = (id: string) => {
     const cls = CLASSES.find((c) => c.id === id)!;
@@ -18,6 +41,8 @@ export function ClassStep() {
     });
   };
 
+  const savedClassName = savedChar ? CLASSES.find((c) => c.id === savedChar.className)?.name : null;
+
   return (
     <WizardShell
       step={1}
@@ -25,6 +50,33 @@ export function ClassStep() {
       subtitle="Your class determines your role, abilities, and domains."
       canNext={!!character.className}
     >
+      {savedChar && !dismissed && (
+        <div className="mb-6 border border-dh-gold/30 rounded-lg bg-dh-surface/80 p-4 flex flex-col sm:flex-row items-start sm:items-center gap-3">
+          <div className="flex-1 min-w-0">
+            <p className="text-sm text-dh-text font-medium">
+              Saved character found: <span className="text-dh-gold font-semibold">{savedChar.name || 'Unnamed'}</span>
+              {savedClassName && (
+                <span className="text-dh-text-muted"> — {savedClassName}</span>
+              )}
+            </p>
+            <p className="text-xs text-dh-text-dim mt-0.5">Pick up where you left off by loading your saved character.</p>
+          </div>
+          <div className="flex gap-2 shrink-0">
+            <button
+              onClick={handleLoad}
+              className="px-4 py-2 rounded bg-gradient-to-b from-dh-gold-light to-dh-gold text-dh-bg font-semibold hover:from-dh-gold hover:to-dh-gold-dark transition-all text-sm shadow-[0_2px_10px_rgba(196,164,78,0.2)]"
+            >
+              Load Character
+            </button>
+            <button
+              onClick={() => setDismissed(true)}
+              className="px-3 py-2 rounded border border-dh-border text-dh-text-muted hover:bg-dh-card transition-colors text-sm"
+            >
+              Dismiss
+            </button>
+          </div>
+        </div>
+      )}
       <CardSelect
         items={CLASSES}
         selectedId={character.className}
