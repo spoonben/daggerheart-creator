@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cinzel+Decorative:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-dh-bg: #0a0a0f;
+  --color-dh-surface: #12121a;
+  --color-dh-card: #1a1a24;
+  --color-dh-card-hover: #222230;
+  --color-dh-border: #2a2a3a;
+  --color-dh-gold: #c4a44e;
+  --color-dh-gold-light: #d4b85e;
+  --color-dh-gold-dark: #8a7030;
+  --color-dh-red: #8b2030;
+  --color-dh-red-light: #b03040;
+  --color-dh-blue: #2a4a7a;
+  --color-dh-text: #e8e4dc;
+  --color-dh-text-muted: #8a8690;
+  --color-dh-text-dim: #5a5660;
+  --color-dh-selected: #2a2a1a;
+  --font-heading: 'Cinzel', serif;
+  --font-display: 'Cinzel Decorative', 'Cinzel', serif;
+  --font-body: 'Inter', sans-serif;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-dh-bg);
+  background-image:
+    radial-gradient(ellipse at 50% 0%, rgba(196, 164, 78, 0.03) 0%, transparent 60%),
+    radial-gradient(ellipse at 50% 100%, rgba(139, 32, 48, 0.02) 0%, transparent 60%);
+  color: var(--color-dh-text);
+  font-family: var(--font-body);
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+}
+
+/* Ornate gold separator */
+.dh-separator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0;
+}
+.dh-separator::before,
+.dh-separator::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-dh-gold-dark), transparent);
+}
+.dh-separator-diamond {
+  width: 8px;
+  height: 8px;
+  background: var(--color-dh-gold-dark);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+
+/* Gold glow effect for selected items */
+.dh-glow {
+  box-shadow: 0 0 15px rgba(196, 164, 78, 0.12), 0 0 30px rgba(196, 164, 78, 0.05), inset 0 1px 0 rgba(196, 164, 78, 0.1);
+}
+
+/* Card hover lift effect */
+.dh-card-interactive {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.dh-card-interactive:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Print styles */
+@media print {
+  body { background: white; color: black; }
+  .no-print { display: none !important; }
+}
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--color-dh-bg); }
+::-webkit-scrollbar-thumb { background: var(--color-dh-border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-dh-gold-dark); }
